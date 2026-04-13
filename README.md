@@ -1,4 +1,4 @@
-# 📄 Document Summarization Refinement
+# Document Summarization Refinement
 A local AI-powered PDF summarization app built with Streamlit and Ollama. Upload a PDF, generate an iteratively refined summary, extract key points, and download everything — all running privately on your machine with no API keys or internet required.
 
 ---
