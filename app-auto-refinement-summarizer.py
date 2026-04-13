@@ -1,3 +1,4 @@
+import streamlit as st
 import PyPDF2
 
 from langchain_core.prompts import ChatPromptTemplate
@@ -11,12 +12,11 @@ model_id = "llama3.1"
 model = Ollama(model=model_id)
 
 # function to extract text from PDF
-def extract_textPfrom_pdf(pdf_path):
-    with open(pdf_path, 'rb') as file:
-        reader = PyPDF2.PdfReader(file)
-        text = ""
-        for page in range(len(reader.pages)):
-            text += reader.pages[page].extract_text()
+def extract_text_from_pdf(pdf_file):
+    pdf_reader = PyPDF2.PdfReader(pdf_file)
+    text = ""
+    for page in range(len(pdf_reader.pages)):
+        text += pdf_reader.pages[page].extract_text()
     return text
 
 def generate_refined_summary(model, text, max_iterations=5):
@@ -38,12 +38,10 @@ def generate_refined_summary(model, text, max_iterations=5):
     initial_prompt = ChatPromptTemplate.from_template(initial_prompt_text)
     current_summary = model.invoke(initial_prompt.format(text=text))
     
-    display(Markdown(f"### Initial Summary (Iteration {iteration})"))
-    display(Markdown(current_summary))
+    initial_summary = current_summary
     
     #iterative refinment process
     while iteration < max_iterations and questions_generated:
-        print("=======================Next iteration=======================")
         iteration += 1
         # ask the LLM to compare the original text and summary and refine it
         refinement_prompt_text = """
@@ -64,10 +62,31 @@ def generate_refined_summary(model, text, max_iterations=5):
         refinement_prompt = ChatPromptTemplate.from_template(refinement_prompt_text)
         current_summary = model.invoke(refinement_prompt.format(text=text, summary = current_summary))
     
-    return current_summary        
+    return initial_summary,current_summary        
     
-document_text = extract_textPfrom_pdf("C:/Users/USER/Downloads/Tution clz work/AL/9. Programming/Programming - Python.pdf")
+# streamlit ui
+st.title('Document Summarization Refinement')
+
+uploaded_file = st.file_uploader("Upload a PDF file", type="pdf")
+
+if uploaded_file:
+    document_text = extract_text_from_pdf(uploaded_file)
+    st.write("Document loaded successfully!")
     
-final_summary = generate_refined_summary(model, document_text, max_iterations=3)
-print("\n\n\n\nFinal Summary:")
-display(Markdown(final_summary))
+    iterations = st.slider("Select the number of iterations for refinement", min_value=1, max_value=10, value=5)
+    
+    if st.button("Generate Summary"):
+        with st.spinner("Generating summaries..."):
+            initial_summary, final_summary = generate_refined_summary(model, document_text, max_iterations=iterations)
+            
+            #displaying intial and final summary side by side
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.subheader("Initial Summary")
+                st.markdown(initial_summary)
+            
+            with col1:
+                st.subheader("Final Summary after {iterations} iterations")
+                st.markdown(final_summary)  
+                
