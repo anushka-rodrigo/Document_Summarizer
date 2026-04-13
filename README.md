@@ -1,11 +1,9 @@
 # 📄 Document Summarization Refinement
-
 A local AI-powered PDF summarization app built with Streamlit and Ollama. Upload a PDF, generate an iteratively refined summary, extract key points, and download everything — all running privately on your machine with no API keys or internet required.
 
 ---
 
 ## Features
-
 - **Iterative Refinement** — generates an initial summary, then refines it over multiple passes to improve clarity, completeness, and accuracy
 - **Side-by-side Comparison** — view the initial and final summary together to see how refinement improved the output
 - **Key Points Extraction** — automatically pulls the 5 most important points from the document as a numbered list
@@ -16,8 +14,27 @@ A local AI-powered PDF summarization app built with Streamlit and Ollama. Upload
 
 ---
 
-## Requirements
+## Tools & Technologies Used
 
+| Tool | Purpose |
+|------|---------|
+| [Streamlit](https://streamlit.io) | Web UI framework for the app interface |
+| [Ollama](https://ollama.com) | Local LLM runtime — runs AI models on your machine |
+| [LangChain](https://www.langchain.com) | Prompt templating and LLM orchestration |
+| [PyPDF2](https://pypdf2.readthedocs.io) | PDF text extraction |
+| [Python 3.10+](https://www.python.org) | Core programming language |
+
+### Models Supported
+| Model | Provider |
+|-------|---------|
+| `deepseek-r1:1.5b` | DeepSeek |
+| `phi3:mini` | Microsoft |
+| `llama3.2:1b` | Meta |
+| `llama3.1` | Meta |
+
+---
+
+## Requirements
 - Python 3.10+
 - [Ollama](https://ollama.com) installed and running locally
 - At least one Ollama model pulled (see below)
@@ -34,7 +51,7 @@ cd document-summarizer
 
 **2. Install Python dependencies**
 ```bash
-pip install streamlit PyPDF2 langchain-core langchain-community
+pip install -r requirements.txt
 ```
 
 **3. Install and start Ollama**
@@ -60,7 +77,6 @@ Then open [http://localhost:8501](http://localhost:8501) in your browser.
 ---
 
 ## Usage
-
 1. Upload a PDF file using the file uploader
 2. Select the number of refinement iterations using the slider (more iterations = more refined summary, but takes longer)
 3. Choose your preferred AI model from the sidebar
@@ -97,7 +113,6 @@ document-summarizer/
 ---
 
 ## Known Limitations
-
 - Large PDFs are truncated to the first ~4000 characters to prevent memory crashes on low-RAM machines
 - `llama3.1` (8B) may crash with a 500 error on machines with less than 8GB RAM — use a smaller model in that case
 - First run may be slow as Ollama loads the model into memory
@@ -105,5 +120,4 @@ document-summarizer/
 ---
 
 ## License
-
 MIT License — feel free to use, modify, and distribute.
