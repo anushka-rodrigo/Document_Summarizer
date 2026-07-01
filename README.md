@@ -66,7 +66,7 @@ Other supported models (add more in the sidebar selectbox):
 ollama pull phi3:mini
 ollama pull llama3.2:1b
 ```
-ss
+
 **4. Run the app**
 ```bash
 python -m streamlit run app-auto-refinement-summarizer.py
