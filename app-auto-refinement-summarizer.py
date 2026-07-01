@@ -15,7 +15,7 @@ with st.sidebar:
     model_id = st.selectbox("Choose Model", ["deepseek-r1:1.5b", "phi3:mini", "llama3.2:1b", "llama3.1"])
     model = Ollama(model=model_id)
 
-
+ggg
 # function to extract text from PDF
 def extract_text_from_pdf(pdf_file):
     pdf_reader = PyPDF2.PdfReader(pdf_file)
